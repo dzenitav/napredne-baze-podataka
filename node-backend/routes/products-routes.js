@@ -5,6 +5,7 @@ const productControllers = require('../controllers/products-controllers');
 
 const router = express.Router();
 
+router.get('/', productControllers.getProducts);
 router.get('/:pid', productControllers.getProductById);
 
 router.get('/user/:uid', productControllers.getProductsByUserId);
@@ -16,9 +17,6 @@ router.post(
       .not()
       .isEmpty(),
     check('description').isLength({ min: 5 }),
-    check('address')
-      .not()
-      .isEmpty()
   ],
   productControllers.createProduct
 );
