@@ -34,6 +34,7 @@ const signup = async (req, res, next) => {
       'Signing up failed, please try again later',
       500
     );
+    return next(error);
   }
   
   if(existingUser) {
@@ -41,6 +42,7 @@ const signup = async (req, res, next) => {
       'User already exists, please log in instead.',
       500
     );
+    return next(error);
   }
 
   const createdUser = new User({
@@ -80,7 +82,7 @@ const login = async (req, res, next) => {
 
   if (!existingUser || existingUser.password !== password) {
     const error = new HttpError(
-      'Invalid credentials',
+      'Login failed, please try again later',
       500
     );
     return next(error);

@@ -33,13 +33,13 @@ const ProductItem = props => {
       <Modal
         show={showMap}
         onCancel={closeMapHandler}
-        header={props.address}
+        header={props.title}
         contentClass="place-item__modal-content"
         footerClass="place-item__modal-actions"
         footer={<Button onClick={closeMapHandler}>CLOSE</Button>}
       >
         <div className="map-container">
-          <img src={props.image} />
+          <img src={props.imageUrl} />
         </div>
       </Modal>
       <Modal
@@ -66,7 +66,7 @@ const ProductItem = props => {
       <li className="place-item">
         <Card className="place-item__content">
           <div className="place-item__image">
-            <img src={props.image} alt={props.title} />
+            <img src={props.imageUrl} alt={props.title} />
           </div>
           <div className="place-item__info">
             <h2>{props.title}</h2>
