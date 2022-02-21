@@ -4,6 +4,7 @@ const { validationResult } = require('express-validator');
 const HttpError = require('../models/http-error');
 const Product = require('../models/product');
 const User = require('../models/user');
+const Category = require('../models/category')
 const mongoose = require('mongoose');
 
 const getProductById = async (req, res, next) => {
@@ -44,7 +45,24 @@ const getProductsByUserId = async (req, res, next) => {
 
   let products;
   try {
-    products = await Product.find( {creator: userId})
+    products = await Product.find({creator: userId})
+  } catch (err) {
+    const error = new HttpError(
+      'Something went wrong, could not find a product',
+      500
+    );
+    return next(error);
+  }
+
+  res.json({ products: products.map(product => product.toObject({getters: true})) });
+};
+
+const getProductsByCategoryId = async (req, res, next) => {
+  const categoryId = req.params.cid;
+
+  let products;
+  try {
+    products = await Product.find( {category: categoryId})
   } catch (err) {
     const error = new HttpError(
       'Something went wrong, could not find a product',
@@ -64,13 +82,14 @@ const createProduct = async (req, res, next) => {
     );
   }
 
-  const { title, description, imageUrl, creator } = req.body;
+  const { title, description, imageUrl, creator, category } = req.body;
 
   const createdProduct = new Product({
     title,
     description,
     imageUrl,
-    creator
+    creator,
+    category,
   });
 
   let user;
@@ -78,7 +97,7 @@ const createProduct = async (req, res, next) => {
     user = await User.findById(creator);
   } catch (err) {
     const error = new HttpError(
-      'Creating product failed, please try again',
+      'Creating product failed, please try again 1',
       500
     )
     return next(error);
@@ -92,12 +111,33 @@ const createProduct = async (req, res, next) => {
     return next(error);
   }
 
+  let productCategory;
+  try {
+    productCategory = await Category.findById(category);
+  } catch (err) {
+    const error = new HttpError(
+      'Creating product failed, please try again 2',
+      500
+    )
+    return next(error);
+  }
+
+  if(!productCategory) {
+    const error = new HttpError(
+      'Could not find category for provided id',
+      404
+    )
+    return next(error);
+  }
+
   try {
     const sess = await mongoose.startSession();
     sess.startTransaction();
     await createdProduct.save({ session: sess});
     user.products.push(createdProduct);
     await user.save({ session: sess});
+    productCategory.products.push(createdProduct);
+    await productCategory.save({ session: sess});
     await sess.commitTransaction();
   } catch (err) {
     const error = new HttpError(
@@ -154,7 +194,7 @@ const deleteProduct = async (req, res, next) => {
 
   let product
   try {
-    product = await Product.findById(productId).populate('creator');
+    product = await Product.findById(productId).populate('creator category');
   } catch (err) {
     const error = new HttpError(
       'Something went wrong, could not find a product',
@@ -177,10 +217,15 @@ const deleteProduct = async (req, res, next) => {
     await product.remove({ session: sess});
     product.creator.products.pull(product)
     await product.creator.save({ session: sess});
+    if(product.category) {
+      product.category.products.pull(product)
+      await product.category.save({ session: sess});
+    }
+  
     await sess.commitTransaction();
   } catch (err) {
     const error = new HttpError(
-      'Something went wrong, could not update a product',
+      'Something went wrong, could not delete a product',
       500
     );
     return next(error);
@@ -191,6 +236,7 @@ const deleteProduct = async (req, res, next) => {
 
 exports.getProductById = getProductById;
 exports.getProductsByUserId = getProductsByUserId;
+exports.getProductsByCategoryId = getProductsByCategoryId;
 exports.createProduct = createProduct;
 exports.updateProduct = updateProduct;
 exports.deleteProduct = deleteProduct;
