@@ -36,7 +36,7 @@ const getProducts = async (req, res, next) => {
     return next(error);
   }
 
-  res.json({ products: products.map(product => product.toObject()) });
+  res.json({ products: products.map(product => product.toObject({getters: true})) });
 };
 
 const getProductsByUserId = async (req, res, next) => {
@@ -53,7 +53,7 @@ const getProductsByUserId = async (req, res, next) => {
     return next(error);
   }
 
-  res.json({ products: products.map(product => product.toObject()) });
+  res.json({ products: products.map(product => product.toObject({getters: true})) });
 };
 
 const createProduct = async (req, res, next) => {
@@ -69,7 +69,7 @@ const createProduct = async (req, res, next) => {
   const createdProduct = new Product({
     title,
     description,
-    imageUrl: 'https://media.glide.mailplus.co.uk/prod/images/950_633/gm-fc6a87db-c3fd-4151-8a4c-d44c8ccdfed2-webl4237676.jpg',
+    imageUrl,
     creator
   });
 
@@ -172,14 +172,12 @@ const deleteProduct = async (req, res, next) => {
   }
 
   try {
-    
     const sess = await mongoose.startSession();
     sess.startTransaction();
     await product.remove({ session: sess});
     product.creator.products.pull(product)
     await product.creator.save({ session: sess});
     await sess.commitTransaction();
-    
   } catch (err) {
     const error = new HttpError(
       'Something went wrong, could not update a product',

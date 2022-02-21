@@ -18,16 +18,22 @@ export const useHttpclient = () => {
             });
     
             const responseData = await response.json();
+
+            activeHttpRequests.current = activeHttpRequests.current.filter(
+                reqCtrl => reqCtrl !== httpAbortCtrl
+            );
+
             if(!response.ok) {
               throw new Error(responseData.message)
             }
 
+            setIsLoading(false);
             return responseData;
         } catch (err) {
-            setError(err.message)
+            setError(err.message);
+            setIsLoading(false);
+            throw err;
         }
-   
-        setIsLoading(false);
     }, []);
 
     const clearError = () => {
@@ -36,7 +42,8 @@ export const useHttpclient = () => {
 
     useEffect(() => {
         return () => {
-            activeHttpRequests.current.forEach(abortCtrl => abortCtrl.abortCtrl());
+             // eslint-disable-next-line react-hooks/exhaustive-deps
+            activeHttpRequests.current.forEach(abortCtrl => abortCtrl.abort());
         }
     }, []);
     return { isLoading, error, sendRequest, clearError };

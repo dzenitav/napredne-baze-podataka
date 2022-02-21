@@ -27,6 +27,7 @@ const ProductList = props => {
           title={place.title}
           description={place.description}
           creatorId={place.creator}
+          onDelete={props.onDeleteProduct}
         />
       ))}
     </ul>
