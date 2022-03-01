@@ -9,26 +9,18 @@ const Products = () => {
   const { isLoading, error, sendRequest, clearError } = useHttpclient();
   const [loadedProducts, setLoadedProducts] = useState();
   const [loadedCategories, setLoadedCategories] = useState();
+  const [ category, setCategory ] = useState();
+  const [ price, setPrice ] = useState(100);
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const queryParams = new URLSearchParams(window.location.search)
-      const term = queryParams.get("category")
       try {
-        let responseData
-        if(term) {
-          responseData = await sendRequest(`http://localhost:4000/api/products/category/${term}`);
-        } else {
-          responseData = await sendRequest('http://localhost:4000/api/products');
-        } 
-       
+        const responseData = await sendRequest('http://localhost:4000/api/products');
         setLoadedProducts(responseData.products);
       } catch(err) {}
     };
     fetchProducts();
-  }, [sendRequest]);
 
-  useEffect(() => {
     const fetchCategories = async () => {
       try {
         const responseData = await sendRequest('http://localhost:4000/api/categories');
@@ -38,23 +30,34 @@ const Products = () => {
     fetchCategories();
   }, [sendRequest]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      let productsUrl = `http://localhost:4000/api/products?price=${price}`;
+      try {
+        if(category) {
+          productsUrl = productsUrl + `&category=${category}`; 
+        } 
+        const responseData = await sendRequest(productsUrl);      
+        setLoadedProducts(responseData.products);
+      } catch(err) {
+        setLoadedProducts(null);
+      }
+    }
+    fetchData();
+  }, [category, price]);
+
   const productDeletedHandler = (deletedProductId) => {
     setLoadedProducts(prevProducts =>
       prevProducts.filter(product => product.id !== deletedProductId)
     );
   }
 
-  const productFilterHandler = async (categoryId) => {  
-    try {
-      let responseData
-      if(categoryId) {
-        responseData = await sendRequest(`http://localhost:4000/api/products/category/${categoryId}`); 
-      } else {
-        responseData = await sendRequest('http://localhost:4000/api/products');
-      } 
-     
-      setLoadedProducts(responseData.products);
-    } catch(err) {}
+  const priceFilterHandler = async (price) => {
+    setPrice(price);
+  }
+
+  const categoryFilterHandler = async (categoryId) => {  
+    setCategory(categoryId);
   }
 
   return (
@@ -66,8 +69,8 @@ const Products = () => {
         </div>
       )}
       <div className="main-wrapper">
-        {!isLoading && loadedProducts && <ProductList key="007" items={loadedProducts} onDeleteProduct={productDeletedHandler}/>}
-        {!isLoading && loadedCategories && <ProductFilters key="001" items={loadedCategories} onSelectCategory={productFilterHandler}/>}
+        {!isLoading && loadedProducts && <ProductList key="007" category={category} items={loadedProducts} onDeleteProduct={productDeletedHandler}/>}
+        {!isLoading && loadedCategories && <ProductFilters key="001" price={price} category={category} items={loadedCategories} onSelectCategory={categoryFilterHandler} onSelectPrice={priceFilterHandler}/>}
       </div>
      
     </React.Fragment>

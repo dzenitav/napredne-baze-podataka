@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useHistory } from 'react-router';
 import Select from 'react-select';
@@ -12,12 +12,14 @@ import {
 } from '../../shared/util/validators';
 import { useForm } from '../../shared/hooks/form-hook';
 import './PlaceForm.css';
+import { AuthContext } from '../../shared/context/auth-context';
 import { useHttpclient } from '../../shared/hooks/http-hook';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 
 
 const UpdateProduct = () => {
+  const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpclient();
   const [loadedProduct, setLoadedProduct] = useState();
   const productId = useParams().productId;
@@ -131,7 +133,8 @@ const UpdateProduct = () => {
         price: formState.inputs.price.value,
       }),
       {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + auth.token,
       });
 
       history.push('/')

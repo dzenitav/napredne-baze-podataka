@@ -76,8 +76,11 @@ body {
   border-radius: 3px;
   text-decoration: none;
   color: white;
-  padding: 5px 10px;
+  padding: 8px 10px;
   margin-top: 5px;
+  max-width: 135px;
+  text-align: center;
+  border: 1px solid #ff0055;
 }
 
 span.place-item__price {

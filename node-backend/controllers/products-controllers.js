@@ -26,43 +26,25 @@ const getProductById = async (req, res, next) => {
 
 const getProducts = async (req, res, next) => {
 
-  let products;
-  try {
-    products = await Product.find()
-  } catch (err) {
-    const error = new HttpError(
-      'Something went wrong, could not find a product',
-      500
-    );
-    return next(error);
-  }
-
-  res.json({ products: products.map(product => product.toObject({getters: true})) });
-};
-
-const getProductsByUserId = async (req, res, next) => {
-  const userId = req.params.uid;
+  const price = req.query && req.query.price;
+  const user = req.query && req.query.user;
+  const category = req.query && req.query.category;
 
   let products;
+  let query = {}
   try {
-    products = await Product.find({creator: userId})
-  } catch (err) {
-    const error = new HttpError(
-      'Something went wrong, could not find a product',
-      500
-    );
-    return next(error);
-  }
+    if(price) {
+      query = {...query, price: { $lte: price }};
+    } 
+    if(category) {
+      query = {...query, category: category};
+    }
 
-  res.json({ products: products.map(product => product.toObject({getters: true})) });
-};
+    if(user) {
+      query = {...query, creator: user};
+    }
 
-const getProductsByCategoryId = async (req, res, next) => {
-  const categoryId = req.params.cid;
-
-  let products;
-  try {
-    products = await Product.find( {category: categoryId})
+    products = await Product.find(query).exec();
   } catch (err) {
     const error = new HttpError(
       'Something went wrong, could not find a product',
@@ -82,20 +64,20 @@ const createProduct = async (req, res, next) => {
     );
   }
 
-  const { title, description, imageUrl, creator, category, price } = req.body;
+  const { title, description, imageUrl, category, price } = req.body;
 
   const createdProduct = new Product({
     title,
     description,
     imageUrl,
-    creator,
+    creator: req.userData.userId,
     category,
     price
   });
 
   let user;
   try {
-    user = await User.findById(creator);
+    user = await User.findById(req.userData.userId);
   } catch (err) {
     const error = new HttpError(
       'Creating product failed, please try again 1',
@@ -148,7 +130,6 @@ const createProduct = async (req, res, next) => {
     return next(error);
   }
 
-
   res.status(201).json({ product: createdProduct });
 };
 
@@ -168,6 +149,14 @@ const updateProduct = async (req, res, next) => {
     const error = new HttpError(
       'Something went wrong, could not find a product',
       500
+    );
+    return next(error);
+  }
+
+  if(product.creator.toString() !== req.userData.userId) {
+    const error = new HttpError(
+      'You are not allowed to edit this product',
+      403
     );
     return next(error);
   }
@@ -196,7 +185,6 @@ const updateProduct = async (req, res, next) => {
   product.description = description;
   product.imageUrl = imageUrl;
   product.price = price;
-
 
   try {
     const sess = await mongoose.startSession();
@@ -248,6 +236,14 @@ const deleteProduct = async (req, res, next) => {
     return next(error);
   }
 
+  if(product.creator.id !== req.userData.userId){
+    const error = new HttpError(
+      'You are not allowed to delete this product',
+      403
+    );
+    return next(error);
+  }
+
   try {
     const sess = await mongoose.startSession();
     sess.startTransaction();
@@ -272,8 +268,6 @@ const deleteProduct = async (req, res, next) => {
 };
 
 exports.getProductById = getProductById;
-exports.getProductsByUserId = getProductsByUserId;
-exports.getProductsByCategoryId = getProductsByCategoryId;
 exports.createProduct = createProduct;
 exports.updateProduct = updateProduct;
 exports.deleteProduct = deleteProduct;

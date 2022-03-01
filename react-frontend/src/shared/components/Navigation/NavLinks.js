@@ -7,12 +7,12 @@ import './NavLinks.css';
 
 const NavLinks = props => {
   const auth = useContext(AuthContext);
-  
+
   return (
     <ul className="nav-links">
       {auth.isLoggedIn && (
         <li>
-          <NavLink to={`/${auth.userId}/products`}>My Products</NavLink>
+          <NavLink to={`/user/${auth.userId}/products`}>My Products</NavLink>
         </li>
       )}
       {auth.isLoggedIn && (

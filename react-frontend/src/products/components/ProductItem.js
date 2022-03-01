@@ -30,7 +30,12 @@ const ProductItem = props => {
   const confirmDeleteHandler = async () => {
     setShowConfirmModal(false);
     try {
-      await sendRequest(`http://localhost:4000/api/products/${props.id}`, 'DELETE');
+      await sendRequest(`http://localhost:4000/api/products/${props.id}`,
+       'DELETE',
+       null,
+       {
+         Authorization: 'Bearer ' + auth.token
+       });
       props.onDelete(props.id);
     } catch(err) {}
   };

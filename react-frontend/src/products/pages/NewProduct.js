@@ -82,12 +82,12 @@ const NewProduct = () => {
         title: formState.inputs.title.value,
         description: formState.inputs.description.value,
         imageUrl: formState.inputs.imageUrl.value,
-        creator: auth.userId,
         category: formState.inputs.category.value,
         price: formState.inputs.price.value
       }),
       {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + auth.token,
       });
 
       history.push('/')

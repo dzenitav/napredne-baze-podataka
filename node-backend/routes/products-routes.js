@@ -1,5 +1,6 @@
 const express = require('express');
 const { check } = require('express-validator');
+const checkAuth = require('../middleware/check-auth')
 
 const productControllers = require('../controllers/products-controllers');
 
@@ -7,8 +8,8 @@ const router = express.Router();
 
 router.get('/', productControllers.getProducts);
 router.get('/:pid', productControllers.getProductById);
-router.get('/user/:uid', productControllers.getProductsByUserId);
-router.get('/category/:cid', productControllers.getProductsByCategoryId);
+
+router.use(checkAuth);
 
 router.post(
   '/',

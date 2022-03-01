@@ -29,6 +29,7 @@ const ProductList = props => {
           creatorId={place.creator}
           onDelete={props.onDeleteProduct}
           price={place.price}
+          category={props.category}
         />
       ))}
     </ul>
