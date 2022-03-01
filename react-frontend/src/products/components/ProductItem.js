@@ -75,10 +75,11 @@ const ProductItem = props => {
         {isLoading && <LoadingSpinner asOverlay/>}
         <Card className="place-item__content">
           <div className="place-item__image">
+            <span className="place-item__price">{props.price}$</span>
             <img src={props.imageUrl} alt={props.title} />
           </div>
           <div className="place-item__info">
-            <h2>{props.title}</h2>
+            <h3>{props.title}</h3>
             <p>{props.description}</p>
           </div>
           <div className="place-item__actions">

@@ -12,7 +12,7 @@ const getProductById = async (req, res, next) => {
 
   let product
   try {
-    product = await Product.findById(productId)
+    product = await Product.findById(productId).populate('category');
   } catch (err) {
     const error = new HttpError(
       'Something went wrong, could not find a product',
@@ -82,7 +82,7 @@ const createProduct = async (req, res, next) => {
     );
   }
 
-  const { title, description, imageUrl, creator, category } = req.body;
+  const { title, description, imageUrl, creator, category, price } = req.body;
 
   const createdProduct = new Product({
     title,
@@ -90,6 +90,7 @@ const createProduct = async (req, res, next) => {
     imageUrl,
     creator,
     category,
+    price
   });
 
   let user;
@@ -157,12 +158,12 @@ const updateProduct = async (req, res, next) => {
     return next(new HttpError('Invalid inputs passed, please check your data.', 422));
   }
 
-  const { title, description, imageUrl } = req.body;
+  const { title, description, imageUrl, category, price } = req.body;
   const productId = req.params.pid;
 
   let product
   try {
-    product = await Product.findById(productId)
+    product = await Product.findById(productId).populate('category');
   } catch (err) {
     const error = new HttpError(
       'Something went wrong, could not find a product',
@@ -171,12 +172,48 @@ const updateProduct = async (req, res, next) => {
     return next(error);
   }
 
+  let productCategory;
+  try {
+    productCategory = await Category.findById(category);
+  } catch (err) {
+    const error = new HttpError(
+      'Creating product failed, please try again 2',
+      500
+    )
+    return next(error);
+  }
+
+  if(!productCategory) {
+    const error = new HttpError(
+      'Could not find category for provided id',
+      404
+    )
+    return next(error);
+  }
+
+
   product.title = title;
   product.description = description;
   product.imageUrl = imageUrl;
+  product.price = price;
+
 
   try {
-    await product.save();
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+
+    if(category !== product.category.id) {
+      // remove product from its current category
+      product.category.products.pull(product)
+      await product.category.save({ session: sess});
+      // add product into new category
+      productCategory.products.push(product);
+      await productCategory.save({ session: sess});
+      product.category = productCategory;
+    }
+
+    await product.save({ session: sess});
+    await sess.commitTransaction();
   } catch (err) {
     const error = new HttpError(
       'Something went wrong, could not update a product',

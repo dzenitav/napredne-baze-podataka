@@ -90,7 +90,6 @@ const updateCategory = async (req, res, next) => {
 
   category.name = name;
   category.description = description;
- 
 
   try {
     await category.save();
