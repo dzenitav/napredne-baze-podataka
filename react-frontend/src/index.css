@@ -68,6 +68,7 @@ body {
 
 .filters-inner-wrapper {
   position: fixed;
+  padding-left: 10px;
 }
 
 .filter-category {
@@ -87,6 +88,12 @@ span.place-item__price {
   position: absolute;
   background: black;
   color: white;
-  padding: 5px;
+  padding: 6px;
   font-weight: 900;
+  font-size: 20px;
+}
+
+.filter-range {
+  margin-bottom: 20px;
+  display: block;
 }

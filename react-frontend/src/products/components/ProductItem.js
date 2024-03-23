@@ -46,7 +46,7 @@ const ProductItem = props => {
       <Modal
         show={showMap}ß
         onCancel={closeMapHandler}
-        header={props.title}
+        header={props.description}
         contentClass="place-item__modal-content"
         footerClass="place-item__modal-actions"
         footer={<Button onClick={closeMapHandler}>CLOSE</Button>}

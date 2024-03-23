@@ -20,6 +20,11 @@
   margin: 0.5rem;
 }
 
+.modal__header h4 {
+  margin: 0;
+  font-weight: 400;
+}
+
 .modal__content {
   padding: 1rem 0.5rem;
 }

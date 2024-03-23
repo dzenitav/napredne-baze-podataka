@@ -27,7 +27,7 @@ const ProductFilters = props => {
       <ErrorModal error={error} onClear={clearError}/>
       <div className="filters-wrapper">
         <div className="filters-inner-wrapper">
-          <h4 className="filters-title">Category</h4>
+          <h4 className="filters-title">Category:</h4>
           
           {props.items.map(cat => {
             return <Link 
@@ -40,7 +40,7 @@ const ProductFilters = props => {
           })}
         
           <h4>Price (up to): { props.price }$</h4>
-          <input type="range"  defaultValue={props.price} onInput={selectPriceHandler} />
+          <input type="range" className="filter-range" defaultValue={props.price} onInput={selectPriceHandler} />
 
           <Button inverse onClick={clearFilters}>
             Clear filters
