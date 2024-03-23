@@ -3,7 +3,9 @@ const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPl
 const { dependencies } = require("./package.json");
 
 module.exports = {
-  entry: "./src/entry.js",
+  entry: {
+    './products': "./src/entry.js",
+  },
   mode: "development",
   devServer: {
     port: 3001,
@@ -42,7 +44,7 @@ module.exports = {
       name: "products",
       filename: "remoteEntry.js",
       exposes: {
-        "./ProductsIndex": "./src/App",
+        "./ProductsIndex": "./src/index",
       },
       shared: {
         ...dependencies,
