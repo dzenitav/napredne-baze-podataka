@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import {
-  BrowserRouter as Router,
+  Router,
   Route,
   Redirect,
   Switch,
@@ -9,29 +9,15 @@ import {
 import Products from "./products/pages/Products";
 import UserProducts from "./products/pages/UserProducts";
 
-let logoutTimer;
 
-const App = () => {
-
-  const routes = (
-    <Switch>
-      <Route path="/" exact>
-        <Products />
-      </Route>
-      <Route path="/user/:userId/products" exact>
-        <UserProducts />
-      </Route>
-      <Redirect to="/" />
-    </Switch>
-  );
+export default ({history}) => {
 
   return (
-   
-      <Router>
-        <main>{routes}</main>
+      <Router history={history}>
+        <Switch>
+          <Route path="/" exact component={Products}/>
+        </Switch>
       </Router>
   
   );
 };
-
-export default App;

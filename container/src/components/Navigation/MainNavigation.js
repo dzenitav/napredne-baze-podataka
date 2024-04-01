@@ -8,6 +8,9 @@ import Backdrop from '../UIElements/Backdrop';
 import './MainNavigation.css';
 
 const MainNavigation = props => {
+  const auth = props.auth;
+  console.log(auth);
+  console.log("------------");
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
 
   const openDrawerHandler = () => {
@@ -23,7 +26,7 @@ const MainNavigation = props => {
       {drawerIsOpen && <Backdrop onClick={closeDrawerHandler} />}
       <SideDrawer show={drawerIsOpen} onClick={closeDrawerHandler}>
         <nav className="main-navigation__drawer-nav">
-          <NavLinks />
+          <NavLinks auth={auth}/>
         </nav>
       </SideDrawer>
 

@@ -7,6 +7,9 @@ module.exports = {
     mode: "development",
     devServer: {
         port: 3000,
+        historyApiFallback: {
+            index: "index.html"
+        }
     },
     module: {
         rules: [
@@ -43,7 +46,8 @@ module.exports = {
             // and its module definition is "remoteEntry.js".
             remotes: {
                 // a remote 'Header' from the url '<http://localhost:3001/remoteEntry.js>'
-                ProductsApp: "products@http://localhost:3001/remoteEntry.js",  
+                ProductsApp: "products@http://localhost:3001/remoteEntry.js", 
+                AuthApp: "auth@http://localhost:3002/remoteEntry.js",  
             },
             shared: {
                 /* ...dependencies,

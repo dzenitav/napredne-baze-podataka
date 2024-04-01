@@ -42,7 +42,7 @@ const signup = async (req, res, next) => {
   if (existingUser) {
     const error = new HttpError(
       "User already exists, please log in instead.",
-      500
+      404
     );
     return next(error);
   }
@@ -97,7 +97,7 @@ const login = async (req, res, next) => {
   }
 
   if (!existingUser) {
-    const error = new HttpError("Login failed, please try again later", 500);
+    const error = new HttpError("Username or password incorrect, please try again.", 404);
     return next(error);
   }
 
@@ -110,7 +110,7 @@ const login = async (req, res, next) => {
   }
 
   if (!isValidPassword) {
-    const error = new HttpError("Login failed, please try again later", 500);
+    const error = new HttpError("Username or password incorrect, please try again.", 404);
     return next(error);
   }
 
