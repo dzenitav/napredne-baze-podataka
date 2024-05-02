@@ -1,12 +1,34 @@
-import React, { useContext } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { NavLink, useHistory } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 
 import './NavLinks.css';
 
-const NavLinks = props => {
-  const auth = props.auth.AuthContext;
-  //const auth = useContext(AuthContext);
+const NavLinks = ({isSignedIn, onSignIn}) => {
+
+  const auth = {
+    isLoggedIn: isSignedIn,
+    userId: null,
+    token: null,
+    login: () => {},
+    logout: () => {}
+  }
+
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  if (userData) {
+    auth.userId = userData.userId;
+  }
+
+  const clickHandler = () =>{
+    onSignIn(false);
+  }
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    if (userData) {
+      auth.userId = userData.userId;
+    }
+  }, [isSignedIn]);
 
   return (
     <ul className="nav-links">
@@ -27,7 +49,7 @@ const NavLinks = props => {
       )}
       {auth.isLoggedIn && (
         <li>
-          <button onClick={auth.logout}>Sign Out</button>
+          <button onClick={clickHandler}>Sign Out</button>
         </li>
       )}
     </ul>

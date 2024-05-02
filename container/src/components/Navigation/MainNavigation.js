@@ -1,49 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 import MainHeader from './MainHeader';
 import NavLinks from './NavLinks';
-import SideDrawer from './SideDrawer';
-import Backdrop from '../UIElements/Backdrop';
 import './MainNavigation.css';
 
-const MainNavigation = props => {
-  const auth = props.auth;
-  console.log(auth);
-  console.log("------------");
-  const [drawerIsOpen, setDrawerIsOpen] = useState(false);
+const MainNavigation = ({isSignedIn, loginStateU}) => {
 
-  const openDrawerHandler = () => {
-    setDrawerIsOpen(true);
-  };
-
-  const closeDrawerHandler = () => {
-    setDrawerIsOpen(false);
-  };
+  const signInCallbackMain = (loginState) => {
+    loginStateU(false);
+  }
 
   return (
     <React.Fragment>
-      {drawerIsOpen && <Backdrop onClick={closeDrawerHandler} />}
-      <SideDrawer show={drawerIsOpen} onClick={closeDrawerHandler}>
-        <nav className="main-navigation__drawer-nav">
-          <NavLinks auth={auth}/>
-        </nav>
-      </SideDrawer>
-
       <MainHeader>
-        <button
-          className="main-navigation__menu-btn"
-          onClick={openDrawerHandler}
-        >
-          <span />
-          <span />
-          <span />
-        </button>
         <h1 className="main-navigation__title">
           <Link to="/">Products</Link>
         </h1>
         <nav className="main-navigation__header-nav">
-          <NavLinks />
+          <NavLinks isSignedIn={isSignedIn} onSignIn={(signInState) => signInCallbackMain(signInState)}/>
         </nav>
       </MainHeader>
     </React.Fragment>

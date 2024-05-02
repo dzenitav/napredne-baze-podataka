@@ -5,11 +5,12 @@ const { dependencies } = require("./package.json");
 module.exports = {
     entry: "./src/entry",
     mode: "development",
+    output: {
+        publicPath: "http://localhost:3000/",
+      },
     devServer: {
         port: 3000,
-        historyApiFallback: {
-            index: "index.html"
-        }
+        historyApiFallback: true,
     },
     module: {
         rules: [

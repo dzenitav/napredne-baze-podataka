@@ -1,29 +1,52 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { lazy, Suspense, useState, useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Route,
-  Redirect,
-  Switch,
+  Switch
 } from "react-router-dom";
 
 import MainNavigation from "./components/Navigation/MainNavigation";
-import ProductsApp from "./components/ProductsApp";
+import Progress from "./components/Progress";
 
-const App = (props, history) => {
+//const ProductsLazy = lazy(() => import("./components/ProductsApp"));
+//const AuthLazy = lazy(() => import("./components/AuthApp"))
 
-  const routes = (
-    <Switch>
-      <Route path="/" exact component={ProductsApp}/>
+import ProductsApp from './components/ProductsApp';
+import AuthApp from './components/AuthApp';
 
-    </Switch>
-  );
+const App = () => {
+  let isLoggedIn = false;
+  const userData = localStorage.getItem("userData");
+  if (userData) {
+      isLoggedIn = true;
+  }
+  const [isSignedIn, setIsSignedIn] = useState(isLoggedIn);
+
+  const signInCallback = (signInState) => {
+      console.log("Container - I am setting new signed in state to: ", signInState)
+      if(!signInState) {
+        localStorage.removeItem("userData");
+      }
+      setIsSignedIn(signInState);
+  }
+
 
   return (
-   
+  
       <Router>
         <main>
-        
-          {routes}
+           <MainNavigation isSignedIn={isSignedIn} loginStateU={(loginState)=> signInCallback(loginState)}/>
+           <Switch>
+              <Route path="/" exact >
+                  <ProductsApp isSignedIn={isSignedIn} />
+              </Route>
+              <Route path="/user/:userId/products" exact>
+                <ProductsApp isSignedIn={isSignedIn} />
+              </Route>
+              <Route path="/auth" exact >
+                  <AuthApp onSignIn={()=> signInCallback(true)}/>
+              </Route>
+          </Switch>
         </main>
       </Router>
   
