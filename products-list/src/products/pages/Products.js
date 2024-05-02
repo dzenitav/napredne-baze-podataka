@@ -69,7 +69,7 @@ const Products = () => {
         </div>
       )}
       <div className="main-wrapper">
-        {!isLoading && loadedProducts && <ProductList key="007" category={category} items={loadedProducts} onDeleteProduct={productDeletedHandler}/>}
+        {!isLoading && loadedProducts && <ProductList key="007" category={category} items={loadedProducts} onDeleteProduct={productDeletedHandler} />}
         {!isLoading && loadedCategories && <ProductFilters key="001" price={price} category={category} items={loadedCategories} onSelectCategory={categoryFilterHandler} onSelectPrice={priceFilterHandler}/>}
       </div>
      

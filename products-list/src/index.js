@@ -1,23 +1,25 @@
-import { createBrowserHistory } from 'history';
+import { createBrowserHistory, createMemoryHistory } from 'history';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import './index.css';
 
-const mount = (el, { onNavigate, defaultHistory }) => {
-    const history = defaultHistory || createMemoryHistory();
+const mount = (el, { onNavigate, defaultHistory, initialPath }) => {
+    const history = defaultHistory || createMemoryHistory({
+        initialEntries: [initialPath]
+    });
 
     if (onNavigate) {
         history.listen(onNavigate);
     }
    
-    ReactDOM.render(<App history={history}/>, el);
+    ReactDOM.render(<App history={history} />, el);
 
     return {
         onParentNavigate( {pathname: nextPathname}) {
             const { pathname } = history.location;
-            console.log('container just navigated')
             if (pathname !== nextPathname) {
+                console.log('onParentNavigate - I am in products list now', pathname, nextPathname);
                 history.push(nextPathname);
             }
         }

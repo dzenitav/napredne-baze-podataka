@@ -15,7 +15,12 @@ export default ({history}) => {
   return (
       <Router history={history}>
         <Switch>
-          <Route path="/" exact component={Products}/>
+          <Route path="/user/:userId/products" exact>
+            <UserProducts />
+          </Route>
+          <Route path="/" exact>
+            <Products />
+          </Route>
         </Switch>
       </Router>
   

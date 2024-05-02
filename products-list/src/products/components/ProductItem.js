@@ -11,7 +11,14 @@ import { useHttpclient } from '../../shared/hooks/http-hook';
 
 const ProductItem = props => {
   const { isLoading, error, sendRequest, clearError } = useHttpclient();
-  const auth = useContext(AuthContext);
+  const auth = {};
+  const userData = localStorage.getItem("userData");
+  if(userData) {
+    const userDataParsed = JSON.parse(userData);
+    auth.isLoggedIn = true;
+    auth.userId = userDataParsed.userId;
+  }
+
   const [showMap, setShowMap] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
