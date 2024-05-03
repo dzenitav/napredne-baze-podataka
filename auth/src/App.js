@@ -49,7 +49,6 @@ export default ({history}) => {
   }, [token, tokenExpirationDate]);
 
   useEffect(() => {
-    console.log("---------------- I am checking user cookie");
     const storedData = JSON.parse(localStorage.getItem("userData"));
     if (storedData && storedData.token && new Date(storedData.expiration) > new Date()) {
       login(storedData.userId, storedData.token, new Date(storedData.expiration));
