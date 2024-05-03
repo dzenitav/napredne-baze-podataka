@@ -12,6 +12,7 @@ import Progress from "./components/Progress";
 //const AuthLazy = lazy(() => import("./components/AuthApp"))
 
 import ProductsApp from './components/ProductsApp';
+import CoreApp from './components/CoreApp';
 import AuthApp from './components/AuthApp';
 
 const App = () => {
@@ -41,7 +42,13 @@ const App = () => {
                   <ProductsApp isSignedIn={isSignedIn} />
               </Route>
               <Route path="/user/:userId/products" exact>
-                <ProductsApp isSignedIn={isSignedIn} />
+                  <ProductsApp isSignedIn={isSignedIn} />
+              </Route>
+              <Route path="/products/:productId" exact>
+                  <CoreApp isSignedIn={isSignedIn} />
+              </Route>
+              <Route path="/products/new" exact>
+                  <CoreApp isSignedIn={isSignedIn} />
               </Route>
               <Route path="/auth" exact >
                   <AuthApp onSignIn={()=> signInCallback(true)}/>

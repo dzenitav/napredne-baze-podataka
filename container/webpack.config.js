@@ -49,6 +49,7 @@ module.exports = {
                 // a remote 'Header' from the url '<http://localhost:3001/remoteEntry.js>'
                 ProductsApp: "products@http://localhost:3001/remoteEntry.js", 
                 AuthApp: "auth@http://localhost:3002/remoteEntry.js",  
+                CoreApp: "core@http://localhost:3003/remoteEntry.js", 
             },
             shared: {
                 /* ...dependencies,
