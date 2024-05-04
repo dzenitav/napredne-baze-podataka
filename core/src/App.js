@@ -8,6 +8,7 @@ import {
 
 import NewProduct from "./products/pages/NewProduct";
 import UpdateProduct from "./products/pages/UpdateProduct";
+import DeleteProduct from "./products/pages/DeleteProduct";
 
 
 export default ({history}) => {
@@ -20,6 +21,9 @@ export default ({history}) => {
           </Route>
           <Route path="/products/:productId" exact>
             <UpdateProduct history={history} />
+          </Route>
+          <Route path="/products/:productId/delete" exact>
+            <DeleteProduct history={history}  />
           </Route>
         </Switch>
       </Router>

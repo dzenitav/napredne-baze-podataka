@@ -16,10 +16,10 @@ export default ({history}) => {
       <Router history={history}>
         <Switch>
           <Route path="/user/:userId/products" exact>
-            <UserProducts />
+            <UserProducts history={history} />
           </Route>
           <Route path="/" exact>
-            <Products />
+            <Products history={history} />
           </Route>
         </Switch>
       </Router>

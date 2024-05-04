@@ -25,9 +25,6 @@ const App = () => {
 
   const signInCallback = (signInState) => {
       console.log("Container - I am setting new signed in state to: ", signInState)
-      if(!signInState) {
-        localStorage.removeItem("userData");
-      }
       setIsSignedIn(signInState);
   }
 
@@ -47,11 +44,17 @@ const App = () => {
               <Route path="/products/:productId" exact>
                   <CoreApp isSignedIn={isSignedIn} />
               </Route>
+              <Route path="/products/:productId/delete" exact>
+                  <CoreApp isSignedIn={isSignedIn} />
+              </Route>
               <Route path="/products/new" exact>
                   <CoreApp isSignedIn={isSignedIn} />
               </Route>
               <Route path="/auth" exact >
-                  <AuthApp onSignIn={()=> signInCallback(true)}/>
+                  <AuthApp onSignIn={(loginState)=> signInCallback(loginState)}/>
+              </Route>
+              <Route path="/auth/logout" exact >
+                  <AuthApp onSignIn={(loginState)=> signInCallback(loginState)}/>
               </Route>
           </Switch>
         </main>

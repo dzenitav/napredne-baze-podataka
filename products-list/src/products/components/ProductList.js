@@ -30,6 +30,7 @@ const ProductList = props => {
           onDelete={props.onDeleteProduct}
           price={place.price}
           category={props.category}
+          history={props.history}
         />
       ))}
     </ul>

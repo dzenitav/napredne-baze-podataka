@@ -3,7 +3,6 @@ import React, { useState, useContext } from 'react';
 import Card from '../../shared/components/UIElements/Card';
 import Button from '../../shared/components/FormElements/Button';
 import Modal from '../../shared/components/UIElements/Modal';
-import { AuthContext } from '../../shared/context/auth-context';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import './ProductItem.css';
@@ -35,16 +34,8 @@ const ProductItem = props => {
   };
 
   const confirmDeleteHandler = async () => {
-    setShowConfirmModal(false);
-    try {
-      await sendRequest(`http://localhost:4000/api/products/${props.id}`,
-       'DELETE',
-       null,
-       {
-         Authorization: 'Bearer ' + auth.token
-       });
-      props.onDelete(props.id);
-    } catch(err) {}
+    const history = props.history;
+    history.push(`/products/${props.id}/delete`);
   };
 
   return (

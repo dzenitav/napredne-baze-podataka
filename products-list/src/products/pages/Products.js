@@ -5,7 +5,7 @@ import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import { useHttpclient } from '../../shared/hooks/http-hook';
 
-const Products = () => {
+const Products = ({ history }) => {
   const { isLoading, error, sendRequest, clearError } = useHttpclient();
   const [loadedProducts, setLoadedProducts] = useState();
   const [loadedCategories, setLoadedCategories] = useState();
@@ -69,7 +69,7 @@ const Products = () => {
         </div>
       )}
       <div className="main-wrapper">
-        {!isLoading && loadedProducts && <ProductList key="007" category={category} items={loadedProducts} onDeleteProduct={productDeletedHandler} />}
+        {!isLoading && loadedProducts && <ProductList key="007" category={category} items={loadedProducts} onDeleteProduct={productDeletedHandler} history={history}/>}
         {!isLoading && loadedCategories && <ProductFilters key="001" price={price} category={category} items={loadedCategories} onSelectCategory={categoryFilterHandler} onSelectPrice={priceFilterHandler}/>}
       </div>
      
