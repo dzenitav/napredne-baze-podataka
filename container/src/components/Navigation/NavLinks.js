@@ -49,7 +49,7 @@ const NavLinks = ({isSignedIn, onSignIn}) => {
       )}
       {auth.isLoggedIn && (
         <li>
-          <button onClick={clickHandler}>Sign Out</button>
+          <NavLink to="/auth/logout">Sign Out</NavLink>
         </li>
       )}
     </ul>

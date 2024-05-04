@@ -15,7 +15,9 @@ export default ({ onSignIn }) => {
                     console.log('navigateeeeee in container - AuthApp.js', pathname, nextPathname);
                     const userData = localStorage.getItem("userData");
                     if (userData) {
-                        onSignIn();
+                       onSignIn(true);
+                    } else {
+                        onSignIn(false);
                     }
                     history.push(nextPathname);
                 }

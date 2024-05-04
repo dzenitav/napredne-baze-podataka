@@ -37,7 +37,12 @@ export default ({history}) => {
     setUserId(null);
     setTokenExpirationDate(null)
     localStorage.removeItem("userData");
+    history.push("/");
   }, []); 
+
+  if (history.location.pathname === "/auth/logout") {
+    logout();
+  }
 
   useEffect(() => {
     if(token && tokenExpirationDate) {
