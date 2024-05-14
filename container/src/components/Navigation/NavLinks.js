@@ -32,6 +32,9 @@ const NavLinks = ({isSignedIn, onSignIn}) => {
 
   return (
     <ul className="nav-links">
+      <li>
+        <NavLink to={`/products/cart`}>Cart</NavLink>
+      </li>
       {auth.isLoggedIn && (
         <li>
           <NavLink to={`/user/${auth.userId}/products`}>My Products</NavLink>
