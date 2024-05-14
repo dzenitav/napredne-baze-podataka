@@ -93,6 +93,22 @@ span.place-item__price {
   font-size: 20px;
 }
 
+span.place-item__cart {
+  position: absolute;
+  background: black;
+  color: white;
+  padding: 0 6px;
+  font-weight: 900;
+  font-size: 16px;
+  right: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+span.place-item__cart.active {
+  background: green;
+}
+
 .filter-range {
   margin-bottom: 20px;
   display: block;

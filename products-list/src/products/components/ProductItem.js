@@ -5,6 +5,7 @@ import Button from '../../shared/components/FormElements/Button';
 import Modal from '../../shared/components/UIElements/Modal';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
+
 import './ProductItem.css';
 import { useHttpclient } from '../../shared/hooks/http-hook';
 
@@ -18,6 +19,17 @@ const ProductItem = props => {
     auth.userId = userDataParsed.userId;
   }
 
+  let addedIntoCart = false;
+  const cartData = localStorage.getItem("cartData");
+  if(cartData) {
+    const cartDataParsed = JSON.parse(cartData);
+    const inCart = cartDataParsed.indexOf(props.id);
+    if (inCart !== -1) {
+      addedIntoCart = true;
+    }
+  } 
+  
+  const [isActive, setIsActive] = useState(addedIntoCart);
   const [showMap, setShowMap] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
@@ -32,6 +44,43 @@ const ProductItem = props => {
   const cancelDeleteHandler = () => {
     setShowConfirmModal(false);
   };
+
+  const handleCartClick = (e) => {
+    e.target.classList.toggle('active');
+    if(isActive) {
+      setIsActive(false);
+      removeFromCart();
+    } else {
+      setIsActive(true);
+      addToCart();
+    }
+  }
+
+  const addToCart = () => {
+    const cartData = localStorage.getItem("cartData");
+    if(cartData && cartData.length !== 0) {
+      const cartDataParsed = JSON.parse(cartData);
+      cartDataParsed.push(props.id);
+      localStorage.setItem("cartData",  JSON.stringify(
+        cartDataParsed
+      ))
+    } else {
+      localStorage.setItem("cartData",  JSON.stringify(
+        [props.id]
+      ))
+    }
+  }
+
+  const removeFromCart = () => {
+    const cartData = localStorage.getItem("cartData");
+    if(cartData && cartData.length !== 0) {
+      const cartDataParsed = JSON.parse(cartData);
+      const filteredArr = cartDataParsed.filter(number => number !== props.id);
+      localStorage.setItem("cartData",  JSON.stringify(
+        filteredArr
+      ))
+    }    
+  }
 
   const confirmDeleteHandler = async () => {
     const history = props.history;
@@ -78,9 +127,15 @@ const ProductItem = props => {
         {isLoading && <LoadingSpinner asOverlay/>}
         <Card className="place-item__content">
           <div className="place-item__image">
-            <span className="place-item__price">{props.price}$</span>
+            <span className="place-item__price">${props.price}</span>
             <img src={props.imageUrl} alt={props.title} />
-          </div>
+            {!auth.isLoggedIn && (
+               <span className={isActive ? 'place-item__cart active': "place-item__cart"} title={isActive ? 'Remove from cart': 'Add to cart'} data-id={props.id} onClick={(e) => handleCartClick(e)}>+</span>
+            )}
+            {auth.isLoggedIn && auth.userId !== props.creatorId && (
+               <span className={isActive ? 'place-item__cart active': "place-item__cart"} title={isActive ? 'Remove from cart': 'Add to cart'} data-id={props.id} onClick={(e) => handleCartClick(e)}>+</span>
+            )}
+              </div>
           <div className="place-item__info">
             <h3>{props.title}</h3>
             <p>{props.description}</p>
