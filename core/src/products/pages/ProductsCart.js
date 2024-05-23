@@ -1,16 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import Select from 'react-select';
-import Input from '../../shared/components/FormElements/Input';
-import Button from '../../shared/components/FormElements/Button';
-import {
-  VALIDATOR_REQUIRE,
-  VALIDATOR_MINLENGTH,
-  VALIDATOR_MAX
-} from '../../shared/util/validators';
-import { useForm } from '../../shared/hooks/form-hook';
 import { useHttpclient } from '../../shared/hooks/http-hook';
-import ErrorModal from '../../shared/components/UIElements/ErrorModal';
-import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import './PlaceForm.css';
 
 const ProductsCart = ({history}) => {
@@ -47,7 +36,6 @@ const ProductsCart = ({history}) => {
     }, [sendRequest]);
 
     const removeItem = (id) => {
-        console.log("I am here now", id);
         const cartData = localStorage.getItem("cartData");
         if(cartData && cartData.length !== 0) {
           const cartDataParsed = JSON.parse(cartData);
