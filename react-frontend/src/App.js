@@ -10,6 +10,7 @@ import Users from "./user/pages/Users";
 import Products from "./products/pages/Products";
 import NewProduct from "./products/pages/NewProduct";
 import UserProducts from "./products/pages/UserProducts";
+import ProductsCart from "./products/components/ProductsCart";
 import Auth from "./user/pages/Auth";
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
 import { AuthContext } from "./shared/context/auth-context";
@@ -67,6 +68,9 @@ const App = () => {
       <Switch>
         <Route path="/" exact>
           <Products />
+        </Route>
+        <Route path="/products/cart" exact>
+          <ProductsCart />
         </Route>
         <Route path="/user/:userId/products" exact>
           <UserProducts />

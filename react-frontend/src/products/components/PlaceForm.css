@@ -1,0 +1,47 @@
+.place-form {
+  list-style: none;
+  margin: 0 auto;
+  padding: 1rem;
+  width: 90%;
+  max-width: 40rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  border-radius: 6px;
+  background: white;
+}
+
+.products-list {
+  list-style: none;
+  margin: 1rem auto;
+  padding: 0;
+  width: 90%;
+  max-width: 50rem;
+}
+
+.products-list li {
+  position: relative;
+}
+
+.products-list li h3 {
+  border-bottom: 1px solid lightgrey;
+  margin: 0;
+  padding: 10px 0;
+}
+
+.products-list .products-cart-remove {
+  display: block;
+  float: right;
+  color: rgb(250, 0, 0);
+  cursor: pointer;
+  font-size: 32px;
+  position: absolute;
+  top: 5px;
+  right: 0;
+  font-weight: 500;
+  line-height: 32px;
+}
+
+.products-list a.button {
+  float: right;
+  margin-right: 0;
+  margin-top: 15px;
+}

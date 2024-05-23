@@ -40,6 +40,54 @@ const ProductItem = props => {
     } catch(err) {}
   };
 
+  let addedIntoCart = false;
+  const cartData = localStorage.getItem("cartData");
+  if(cartData) {
+    const cartDataParsed = JSON.parse(cartData);
+    const inCart = cartDataParsed.indexOf(props.id);
+    if (inCart !== -1) {
+      addedIntoCart = true;
+    }
+  } 
+  const [isActive, setIsActive] = useState(addedIntoCart);
+
+  const handleCartClick = (e) => {
+    e.target.classList.toggle('active');
+    if(isActive) {
+      setIsActive(false);
+      removeFromCart();
+    } else {
+      setIsActive(true);
+      addToCart();
+    }
+  }
+
+  const addToCart = () => {
+    const cartData = localStorage.getItem("cartData");
+    if(cartData && cartData.length !== 0) {
+      const cartDataParsed = JSON.parse(cartData);
+      cartDataParsed.push(props.id);
+      localStorage.setItem("cartData",  JSON.stringify(
+        cartDataParsed
+      ))
+    } else {
+      localStorage.setItem("cartData",  JSON.stringify(
+        [props.id]
+      ))
+    }
+  }
+
+  const removeFromCart = () => {
+    const cartData = localStorage.getItem("cartData");
+    if(cartData && cartData.length !== 0) {
+      const cartDataParsed = JSON.parse(cartData);
+      const filteredArr = cartDataParsed.filter(number => number !== props.id);
+      localStorage.setItem("cartData",  JSON.stringify(
+        filteredArr
+      ))
+    }    
+  }
+
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError}/>
@@ -82,6 +130,12 @@ const ProductItem = props => {
           <div className="place-item__image">
             <span className="place-item__price">{props.price}$</span>
             <img src={props.imageUrl} alt={props.title} />
+            {!auth.isLoggedIn && (
+               <span className={isActive ? 'place-item__cart active': "place-item__cart"} title={isActive ? 'Remove from cart': 'Add to cart'} data-id={props.id} onClick={(e) => handleCartClick(e)}>+</span>
+            )}
+            {auth.isLoggedIn && auth.userId !== props.creatorId && (
+               <span className={isActive ? 'place-item__cart active': "place-item__cart"} title={isActive ? 'Remove from cart': 'Add to cart'} data-id={props.id} onClick={(e) => handleCartClick(e)}>+</span>
+            )}
           </div>
           <div className="place-item__info">
             <h3>{props.title}</h3>
